@@ -1,5 +1,10 @@
 package com.microyu.server;
 
+import com.microyu.server.http.Cookie;
+import com.microyu.server.http.Request;
+import com.microyu.server.http.ResourceHandler;
+import com.microyu.server.http.Response;
+import com.microyu.server.servelet.ServletContext;
 import com.microyu.server.utils.HttpRequestMethod;
 import com.microyu.server.utils.HttpStatus;
 
@@ -32,22 +37,25 @@ public class Dispacher implements Runnable {
 
                 request = new Request(socket.getInputStream());
                 //System.out.println(request.getRequestMessage());
+                System.out.println(request.getUrl());
 
                 response = new Response(socket.getOutputStream());
-                response.appendContent("<h2>HelloWolrd</h2>");
-                response.pushResponse(HttpStatus.OK);
+                response.appendCookie(new Cookie("JSESSIONID", request.getSession().getId()));
+                //response.appendContent("<h2>HelloWolrd</h2>");
+
                 //System.out.println(response.getResponseMessage());
-
-
                 if (request.getMethod() == HttpRequestMethod.GET && (request.getUrl().contains(".") || request.getUrl().equals("/"))) {
                     if (request.getUrl().equals("/")) {
-                        //首页
+                        request.setUrl("/index.html");
+                        ResourceHandler.handler(request, response);
                     } else {
-                        //其他静态资源
+                        ResourceHandler.handler(request, response);
                     }
                 } else {
                     //处理动态资源，交由某个Servlet
+                    response.appendContent("Servlet".getBytes(), 1024);
                 }
+                response.pushResponse(HttpStatus.OK);
 
                 request.close();
                 response.close();
