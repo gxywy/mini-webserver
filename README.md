@@ -1,8 +1,6 @@
 # JavaWebServer
 
-使用Java编写的Web服务器，主要提供了简单的HTTP服务、Servlet应用服务与模板引擎
-
-An web server written in JAVA, mainly provides simple HTTP connector, servlet container,  and template engine.
+使用Java编写，基于Java BIO、Socket、并发、XML解析等技术，实现了HTTP请求与响应的处理、Cookie与Session管理、Servlet上下文、Servlet过滤器等，提供了完整的HTTP服务、Servlet容器与模板引擎功能。
 
 ## 功能
 
@@ -20,16 +18,18 @@ An web server written in JAVA, mainly provides simple HTTP connector, servlet co
   - Cookie生命管理
   - Cookie有效路径
   - Cookie实用工具
+- Servlet容器
+  - Servlet Context
+  - Servlet Filter
+- 简易模板引擎
 
 ## TODO
-
-- Servlet容器
-- 简易模板引擎
+- Servlet Listener
 
 ## 参考
 
-https://github.com/apache/tomcat
-https://github.com/songxinjianqwe/WebServer/
-https://github.com/Filirom1/SimpleHTTPServer/
-https://github.com/storytellersoftware/java-httpserver/
+- https://github.com/apache/tomcat
+- https://github.com/songxinjianqwe/WebServer/
+- https://github.com/Filirom1/SimpleHTTPServer/
+- https://github.com/storytellersoftware/java-httpserver/
 

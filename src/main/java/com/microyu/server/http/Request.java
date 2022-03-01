@@ -1,6 +1,6 @@
 package com.microyu.server.http;
 
-import com.microyu.server.servelet.ServletContext;
+import com.microyu.server.servlet.ServletContext;
 import com.microyu.server.utils.HttpRequestMethod;
 
 import java.io.*;
@@ -113,6 +113,8 @@ public class Request {
                 cookies.add(new Cookie(kv[0], kv[1]));
             }
             // headers.remove("Cookie");
+        } else {
+            cookies = new ArrayList<>();
         }
     }
 
@@ -155,14 +157,14 @@ public class Request {
         }
         for (Cookie cookie : cookies) {
             if (cookie.getKey().equals("JSESSIONID")) {
-                Session currentSession = ServletContext.getSession(cookie.getValue());
+                Session currentSession = ServletContext.getServletContext().getSession(cookie.getValue());
                 if (currentSession != null) {
                     session = currentSession;
                     return session;
                 }
             }
         }
-        return session;
+        return new Session();
     }
 
 

@@ -57,6 +57,9 @@ public class Response {
     }
 
     public void pushResponse(HttpStatus status) {
+        if (!status.equals(HttpStatus.OK))
+            byteBody = new byte[0];
+
         buildHeader(status);
 
         byte[] byteHeader = header.toString().getBytes();
@@ -86,7 +89,6 @@ public class Response {
         }
         cookies.add(cookie);
     }
-
 
     public void appendContent(byte[] content, int len) {
         if(byteBody == null) {
