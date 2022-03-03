@@ -35,13 +35,12 @@ public class ServletContext {
     private Map<String, Session> sessionMap;
 
     public HttpServlet dispatch(String url) {
-        return servletMap.get(urlMap.get(url));
+        return urlMap.get(url) == null ? null : servletMap.get(urlMap.get(url));
     }
 
     //从web.xml读到servlet映射
     public void init() {
         SAXReader reader = new SAXReader();
-        System.out.println();
         Document doc = null;
         try {
             doc = reader.read(this.getClass().getResource("/webapp/WEB-INF/web.xml").getFile());

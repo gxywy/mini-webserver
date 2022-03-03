@@ -4,7 +4,16 @@ import com.microyu.server.http.Request;
 import com.microyu.server.http.Response;
 import com.microyu.server.utils.HttpRequestMethod;
 
-public abstract class HttpServlet {
+public abstract class HttpServlet implements Servlet {
+    @Override
+    public void init() {
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    @Override
     public void service(Request request, Response response) {
         if (request.getMethod() == HttpRequestMethod.GET) {
             doGet(request, response);

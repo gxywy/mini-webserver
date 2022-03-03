@@ -102,6 +102,11 @@ public class Response {
         }
     }
 
+    public void setContent(byte[] content) {
+        byteBody = new byte[content.length];
+        System.arraycopy(content, 0, byteBody, 0, content.length);
+    }
+
     public void close() {
         try {
             bufferedOutputStream.close();

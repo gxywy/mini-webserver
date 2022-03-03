@@ -1,5 +1,7 @@
 package com.microyu.server.http;
 
+import com.microyu.server.http.dispatcher.ApplicationRequestDispatcher;
+import com.microyu.server.http.dispatcher.RequestDispatcher;
 import com.microyu.server.servlet.ServletContext;
 import com.microyu.server.utils.HttpRequestMethod;
 
@@ -18,6 +20,7 @@ public class Request {
     private Map<String, List<String>> headers;
     private Session session;
     private ArrayList<Cookie> cookies;
+    private ServletContext servletContext;
 
     private BufferedReader bufferedReader;
 
@@ -25,6 +28,7 @@ public class Request {
         request = new StringBuilder();
         body = new StringBuilder();
         headers = new HashMap<>();
+        servletContext = ServletContext.getServletContext();
 
         try {
             //使用字符流进行解析，注意不能直接使用InputStream或BufferedInputStream
@@ -181,6 +185,10 @@ public class Request {
         return url;
     }
 
+    public RequestDispatcher getRequestDispatcher(String url) {
+        return new ApplicationRequestDispatcher(url);
+    }
+
     public Map<String, List<String>> getParams() {
         return params;
     }
@@ -195,5 +203,9 @@ public class Request {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public ServletContext getServletContext() {
+        return this.servletContext;
     }
 }

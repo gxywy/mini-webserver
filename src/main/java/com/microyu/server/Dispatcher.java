@@ -7,16 +7,13 @@ import com.microyu.server.http.Response;
 import com.microyu.server.servlet.ServletContext;
 import com.microyu.server.servlet.ServletHandler;
 import com.microyu.server.utils.HttpRequestMethod;
-import com.microyu.server.utils.HttpStatus;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Properties;
 
-public class Dispacher implements Runnable {
+public class Dispatcher implements Runnable {
     private static int PORT = 8080;
 
     private ServerSocket serverSocket;
@@ -24,7 +21,7 @@ public class Dispacher implements Runnable {
     private Request request;
     private Response response;
 
-    public Dispacher() {
+    public Dispatcher() {
         try {
             this.serverSocket = new ServerSocket(PORT);
         } catch (IOException e) {
