@@ -30,7 +30,7 @@ public class ResourceHandler {
             bos.write(buffer, 0, len);
         }
 
-        bos.close();
+        //bos.close();
         bis.close();
         fis.close();
 

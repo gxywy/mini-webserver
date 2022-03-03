@@ -7,6 +7,7 @@ import com.microyu.server.http.Response;
 import com.microyu.server.servlet.ServletContext;
 import com.microyu.server.servlet.ServletHandler;
 import com.microyu.server.utils.HttpRequestMethod;
+import com.microyu.server.utils.HttpStatus;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class Dispatcher implements Runnable {
     private Socket socket;
     private Request request;
     private Response response;
+    private int count = 0;
 
     public Dispatcher() {
         try {
@@ -36,13 +38,11 @@ public class Dispatcher implements Runnable {
                 socket = serverSocket.accept();
 
                 request = new Request(socket.getInputStream());
-                //System.out.println(request.getRequestMessage());
                 System.out.println(request.getUrl());
 
                 response = new Response(socket.getOutputStream());
-                response.appendCookie(new Cookie("JSESSIONID", request.getSession().getId()));
+                //response.appendCookie(new Cookie("JSESSIONID", request.getSession().getId()));
 
-                //System.out.println(response.getResponseMessage());
                 if (request.getMethod() == HttpRequestMethod.GET && (request.getUrl().contains(".") || request.getUrl().equals("/"))) {
                     if (request.getUrl().equals("/")) {
                         request.setUrl("/index.html");
@@ -55,10 +55,10 @@ public class Dispatcher implements Runnable {
                     new Thread(new ServletHandler(request, response, ServletContext.getServletContext().dispatch(request.getUrl()))).run();
                 }
 
-                request.close();
-                response.close();
+                //request.close();
+                //response.close();
                 socket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

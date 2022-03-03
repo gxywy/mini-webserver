@@ -6,6 +6,8 @@ import com.microyu.server.servlet.ServletContext;
 import com.microyu.server.utils.HttpRequestMethod;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class Request {
@@ -14,8 +16,7 @@ public class Request {
 
     private String url;
     private HttpRequestMethod method;
-    private StringBuilder request;
-    private StringBuilder body;
+    private String request;
     private Map<String, List<String>> params;
     private Map<String, List<String>> headers;
     private Session session;
@@ -24,57 +25,41 @@ public class Request {
 
     private BufferedReader bufferedReader;
 
-    public Request(InputStream inputStream) {
-        request = new StringBuilder();
-        body = new StringBuilder();
+    public Request(InputStream inputStream) throws Exception {
         headers = new HashMap<>();
         servletContext = ServletContext.getServletContext();
 
-        try {
-            //使用字符流进行解析，注意不能直接使用InputStream或BufferedInputStream
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//        bin = new BufferedInputStream(inputStream);
+//        byte[] buf = new byte[bin.available()];
+//        int len = bin.read(buf);
+//        if (len <= 0) {
+//            throw new IOException();
+//        }
 
-            //解析请求第一行：请求方法、URL
-            String firstLine = bufferedReader.readLine();
-            parseFirstLine(firstLine);
-            request.append(firstLine).append(CRLF);
-
-            //解析请求头
-            while (bufferedReader.ready()) {
-                String headerLine = bufferedReader.readLine();
-                if (headerLine.length() == 0) {
-                    break;
-                }
-                parseHeader(headerLine);
-                request.append(headerLine).append(CRLF);
-            }
-
-            //解析请求体，此处不能再次使用bufferedReader.ready()，需要根据请求头中的长度手动读入body
-            StringBuilder bodyLine = new StringBuilder();
-            if (headers.containsKey("Content-Length") && !headers.get("Content-Length").get(0).equals("0")) {
-                List<String> lengths = this.headers.get("Content-Length");
-                if (lengths != null) {
-                    int length = Integer.parseInt(lengths.get(0));
-
-                    for (int i = 0; i < length; i++) {
-                        bodyLine.append((char)bufferedReader.read());
-                    }
-
-                    body.append(bodyLine);
-                    request.append(bodyLine);
-                    byte[] bytesBodyLine = bodyLine.toString().getBytes();
-                    parseParams(new String(bytesBodyLine, 0, Math.min(length,bytesBodyLine.length)));
-                }
-            }
-
-            //读入完毕后不能关流，会导致socket关闭
-        } catch (Exception e) {
-            e.printStackTrace();
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String content = "";
+        String line = null;
+        while((line = bufferedReader.readLine()).length() != 0) {
+            content += line;
         }
 
+        request = URLDecoder.decode(content, Charset.forName("UTF-8"));
+        String[] lines = request.split(CRLF);
+        parseFirstLine(lines[0]);
+        for (int i = 1; i <lines.length; i++) {
+            if (lines[i].equals("")) {
+                break;
+            }
+            parseHeader(lines[i]);
+        }
+
+        if (headers.containsKey("Content-Length") && !headers.get("Content-Length").get(0).equals("0")) {
+            parseBody(lines[lines.length - 1]);
+        }
+
+        //读入完毕后不能关流，会导致socket关闭
 //        System.out.println(url);
 //        System.out.println(method);
-//        System.out.println(body);
 //        System.out.println(params);
 //        System.out.println(headers);
 //        System.out.println(cookies);
@@ -98,10 +83,6 @@ public class Request {
 
 
     private void parseHeader(String headerLine) {
-        if (headerLine.equals("")) {
-            return;
-        }
-
         //解析请求头
         int colonIndex = headerLine.indexOf(':');
         String key = headerLine.substring(0, colonIndex);
@@ -123,13 +104,9 @@ public class Request {
     }
 
     private void parseBody(String bodyLine) {
-        byte[] bytesBodyLine = bodyLine.getBytes();
-        if (headers.containsKey("Content-Length") && !headers.get("Content-Length").get(0).equals("0")) {
-            List<String> lengths = this.headers.get("Content-Length");
-            if (lengths != null) {
-                int length = Integer.parseInt(lengths.get(0));
-                parseParams(new String(bytesBodyLine, 0, Math.min(length,bytesBodyLine.length)).trim());
-            }
+        parseParams(bodyLine);
+        if (this.params == null) {
+            this.params = new HashMap<>();
         }
     }
 
