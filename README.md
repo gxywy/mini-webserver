@@ -4,28 +4,32 @@ MiniWebServer是使用Java编写的轻量级Web应用服务器，基于Java NIO�
 
 ## 目录结构
 
+- BootStrap.java，启动类
+- MiniServer.java，服务器主逻辑循环
+- ServerThreadExecutor.java，请求业务处理线程池
+
 ```java
 .
 ├── server
-│   ├── BootStrap.java								// 启动类
-│   ├── MiniServer.java								// 服务器
-│   ├── ServerThreadExecutor.java			// 业务处理线程池
+│   ├── BootStrap.java
+│   ├── MiniServer.java
+│   ├── ServerThreadExecutor.java
 │   ├── handler
 │   │   ├── FileHandler.java
-│   │   ├── HttpRequestResolver.java	// 解析Http请求
+│   │   ├── HttpRequestResolver.java
 │   │   ├── RequestHandler.java
 │   │   ├── ServletHandler.java
 │   │   └── TemplateHandler.java
-│   ├── http													// Http请求与响应
+│   ├── http
 │   │   ├── Cookie.java
 │   │   ├── Session.java
 │   │   ├── request
 │   │   └── response
-│   ├── servlet												// Servlet处理部分
+│   ├── servlet
 │   │   ├── HttpServlet.java
 │   │   ├── Servlet.java
 │   │   └── ServletContext.java
-│   ├── template											// 模版解析器
+│   ├── template
 │   │   └── TemplateResolver.java
 │   └── util
 │       ├── HttpContentTypeUtil.java
@@ -33,7 +37,7 @@ MiniWebServer是使用Java编写的轻量级Web应用服务器，基于Java NIO�
 │       ├── HttpStatusUtil.java
 │       ├── HttpVersionUtil.java
 │       └── ServerConfigUtil.java
-└── testservlet												// 测试Servlet的例子
+└── testservlet
     ├── TestServlet.java
     └── UserServlet.java
 ```
