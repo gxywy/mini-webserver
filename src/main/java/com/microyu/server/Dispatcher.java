@@ -52,7 +52,7 @@ public class Dispatcher implements Runnable {
                     }
                 } else {
                     //处理动态资源，交由某个Servlet
-                    new Thread(new ServletHandler(request, response, ServletContext.getServletContext().dispatch(request.getUrl()))).run();
+                    new Thread(new ServletHandler(request, response, ServletContext.getServletContext().dispatch(request.getUrl()))).start();
                 }
 
                 //request.close();
