@@ -1,8 +1,8 @@
 package com.microyu.server.servlet;
 
-import com.microyu.server.http.Request;
-import com.microyu.server.http.Response;
-import com.microyu.server.utils.HttpRequestMethod;
+import com.microyu.server.http.request.HttpRequest;
+import com.microyu.server.http.response.HttpResponse;
+import com.microyu.server.util.HttpRequestMethodUtil;
 
 public abstract class HttpServlet implements Servlet {
     @Override
@@ -14,27 +14,27 @@ public abstract class HttpServlet implements Servlet {
     }
 
     @Override
-    public void service(Request request, Response response) {
-        if (request.getMethod() == HttpRequestMethod.GET) {
+    public void service(HttpRequest request, HttpResponse response) {
+        if ("GET".equals(request.getMethod())) {
             doGet(request, response);
-        } else if (request.getMethod() == HttpRequestMethod.POST) {
+        } else if ("POST".equals(request.getMethod())) {
             doPost(request, response);
-        } else if (request.getMethod() == HttpRequestMethod.PUT) {
+        } else if ("PUT".equals(request.getMethod())) {
             doPut(request, response);
-        } else if (request.getMethod() == HttpRequestMethod.DELETE) {
+        } else if ("DELTE".equals(request.getMethod())) {
             doDelete(request, response);
         }
     }
 
-    public void doGet(Request request, Response response) {
+    public void doGet(HttpRequest request, HttpResponse response) {
     }
 
-    public void doPost(Request request, Response response) {
+    public void doPost(HttpRequest request, HttpResponse response) {
     }
 
-    public void doPut(Request request, Response response) {
+    public void doPut(HttpRequest request, HttpResponse response) {
     }
 
-    public void doDelete(Request request, Response response) {
+    public void doDelete(HttpRequest request, HttpResponse response) {
     }
 }

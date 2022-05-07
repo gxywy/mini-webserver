@@ -1,8 +1,8 @@
 package com.microyu.server.servlet;
 
 import com.microyu.server.http.Cookie;
-import com.microyu.server.http.Response;
 import com.microyu.server.http.Session;
+import com.microyu.server.http.response.HttpResponse;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -78,10 +78,10 @@ public class ServletContext {
         return sessionMap.get(JSESSIONID);
     }
 
-    public Session createSession(Response response){
+    public Session createSession(HttpResponse response){
         Session session = new Session();
         sessionMap.put(session.getId(),session);
-        response.appendCookie(new Cookie("JSESSIONID", session.getId()));
+        response.addCookie(new Cookie("JSESSIONID", session.getId()));
         return session;
     }
 

@@ -1,12 +1,12 @@
 package com.microyu.server.servlet;
 
-import com.microyu.server.http.Request;
-import com.microyu.server.http.Response;
+import com.microyu.server.http.request.HttpRequest;
+import com.microyu.server.http.response.HttpResponse;
 
 public interface Servlet {
     void init();
 
     void destroy();
 
-    void service(Request request, Response response);
+    void service(HttpRequest request, HttpResponse response);
 }

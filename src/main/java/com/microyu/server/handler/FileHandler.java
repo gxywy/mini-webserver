@@ -1,17 +1,21 @@
-package com.microyu.server.http;
+package com.microyu.server.handler;
 
-import com.microyu.server.Dispatcher;
-import com.microyu.server.utils.HttpStatus;
+import com.microyu.server.MiniServer;
+import com.microyu.server.http.request.HttpRequest;
+import com.microyu.server.http.response.HttpResponse;
+import com.microyu.server.util.HttpContentTypeUtil;
+import com.microyu.server.util.HttpStatusUtil;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
-public class ResourceHandler {
+public class FileHandler {
 
     public static Path getPathFromFile(String fileName) {
-        File file = new File(Dispatcher.class.getResource("/webapp").getFile());
+        File file = new File(MiniServer.class.getResource("/webapp").getFile());
         Path path = Paths.get(file.getAbsolutePath(), fileName);
         return path;
     }
@@ -37,19 +41,16 @@ public class ResourceHandler {
         return bos.toByteArray();
     }
 
-    public static void handler(Request request, Response response) {
+    public static void handle(HttpRequest request, HttpResponse response) {
         try {
-            Path path = getPathFromFile(request.getUrl());
-            byte[] byteFromFile = getByteFromFile(request.getUrl());
-            response.appendContent(byteFromFile, byteFromFile.length);
-
-            if (!path.toString().endsWith(".html")) {
-                response.setContentType(Files.probeContentType(path));
-            }
-
-            response.pushResponse(HttpStatus.OK);
+            Path path = getPathFromFile(request.getRequestURI());
+            byte[] byteFromFile = getByteFromFile(request.getRequestURI());
+            response.addHeader("Content-Length", String.valueOf(byteFromFile.length));
+            response.addContent(byteFromFile);
+            response.setContentType(Files.probeContentType(path));
+            response.setResponseCode(200);
         } catch (IOException e) {
-            response.pushResponse(HttpStatus.NOT_FOUND);
+            response.setResponseCode(404);
             e.printStackTrace();
         }
     }

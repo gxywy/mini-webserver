@@ -3,12 +3,12 @@
 <web-app>
     <servlet>
         <servlet-name>TestServlet</servlet-name>
-        <servlet-class>com.microyu.servlet.TestServlet</servlet-class>
+        <servlet-class>com.microyu.testservlet.TestServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.microyu.servlet.UserServlet</servlet-class>
+        <servlet-class>com.microyu.testservlet.UserServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
